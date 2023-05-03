@@ -1,0 +1,30 @@
+@startuml
+
+class TodoList {
+- id:UUID
+- name:String
+- completed:boolean
++ setCompleted(completed:boolean)
++ getCompleted():boolean
+}
+
+
+class TodoList_Item {
+- id:UUID
+- todoDesription:String
+- completed:boolean
++ setCompleted(completed:boolean)
++ getCompleted():boolean
+}
+
+class Person {
+- id:UUID
+- name:String
++ setName(name:String)
++ getName():String
+}
+
+Person "1" *-- "0..*" TodoList : has one to many
+TodoList "1" *-- "0..*" TodoList_Item : has one to many
+
+@enduml
