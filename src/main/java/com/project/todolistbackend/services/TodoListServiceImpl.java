@@ -1,11 +1,13 @@
 package com.project.todolistbackend.services;
 
 import com.project.todolistbackend.Models.TodoList;
+import com.project.todolistbackend.Models.TodoListItem;
 import com.project.todolistbackend.repositories.TodoListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -16,7 +18,7 @@ public class TodoListServiceImpl implements TodoListService {
 
     @Override
     public TodoList add(TodoList entity) {
-        return null;
+        return todoListRepository.save(entity);
     }
 
     @Override
@@ -26,16 +28,20 @@ public class TodoListServiceImpl implements TodoListService {
 
     @Override
     public TodoList findById(UUID id) {
-        return null;
+        Optional<TodoList> todoList = todoListRepository.findById(id);
+        return !todoList.isEmpty() ? todoList.get() : null;
     }
 
     @Override
     public TodoList update(TodoList entity) {
-        return null;
+        return todoListRepository.save(entity);
     }
 
     @Override
     public void deleteById(UUID id) {
-
+        TodoList todoList = findById(id);
+        if(todoList != null) {
+            todoListRepository.deleteById(id);
+        }
     }
 }

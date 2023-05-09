@@ -29,8 +29,6 @@ public class TodolistBackendApplication implements ApplicationRunner {
 	}
 
 
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(TodolistBackendApplication.class, args);
 	}
