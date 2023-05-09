@@ -1,5 +1,6 @@
 package com.project.todolistbackend.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -12,7 +13,8 @@ public class TodoListItem {
     private String todoDescription;
     private boolean completed;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="todoList_id", nullable = false)
     private TodoList todoList;
 
@@ -46,5 +48,13 @@ public class TodoListItem {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public TodoList getTodoList() {
+        return todoList;
+    }
+
+    public void setTodoList(TodoList todoList) {
+        this.todoList = todoList;
     }
 }

@@ -1,10 +1,9 @@
 package com.project.todolistbackend.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 public class Person {
@@ -13,8 +12,9 @@ public class Person {
     private UUID uuid;
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-    private List<TodoList> todoLists = new LinkedList<>();
+    private Set<TodoList> todoLists = new HashSet<>();
 
     public Person() {
     }
@@ -37,5 +37,17 @@ public class Person {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<TodoList> getTodoLists() {
+        return todoLists;
+    }
+
+    public void setTodoLists(Set<TodoList> todoLists) {
+        this.todoLists = todoLists;
+    }
+
+    public void addTodoList(TodoList todoList) {
+        todoLists.add(todoList);
     }
 }
