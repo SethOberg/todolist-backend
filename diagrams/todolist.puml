@@ -4,7 +4,7 @@ class TodoList {
 - id:UUID
 - name:String
 - completed:boolean
-+ setCompleted(completed:boolean)
++ setCompleted(completed:boolean):void
 + getCompleted():boolean
 }
 
@@ -13,14 +13,14 @@ class TodoList_Item {
 - id:UUID
 - todoDesription:String
 - completed:boolean
-+ setCompleted(completed:boolean)
++ setCompleted(completed:boolean):void
 + getCompleted():boolean
 }
 
 class Person {
 - id:UUID
 - name:String
-+ setName(name:String)
++ setName(name:String):void
 + getName():String
 }
 
