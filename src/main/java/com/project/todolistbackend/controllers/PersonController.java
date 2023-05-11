@@ -4,10 +4,7 @@ import com.project.todolistbackend.Models.Person;
 import com.project.todolistbackend.services.PersonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +16,6 @@ public class PersonController {
     @Autowired
     private PersonServiceImpl personService;
 
-
     @GetMapping("/{id}")
     public Person getPerson(@PathVariable UUID id) {
         return personService.findById(id);
@@ -28,6 +24,21 @@ public class PersonController {
     @GetMapping
     public Collection<Person> getAllPeople() {
         return personService.findAll();
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletePerson(@PathVariable UUID id) {
+        personService.deleteById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Person updatePerson( @RequestBody Person person) {
+        return personService.update(person);
+    }
+
+    @PostMapping
+    public Person addPerson(@RequestBody Person person) {
+        return personService.add(person);
     }
 
 
