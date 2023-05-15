@@ -1,6 +1,7 @@
 package com.project.todolistbackend.controllers;
 
 import com.project.todolistbackend.Models.Person;
+import com.project.todolistbackend.Models.TodoList;
 import com.project.todolistbackend.services.PersonServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,16 @@ public class PersonController {
         return personService.add(person);
     }
 
+    @PutMapping(path = "addToDoList/{id}")
+    public void addTodoList(@PathVariable UUID id, @RequestBody TodoList todoList) {
+        Person person = personService.findById(id);
+        todoList.setPerson(person);
+        if(person != null) {
+            person.addTodoList(todoList);
+        }
+
+        personService.update(person);
+
+    }
 
 }
