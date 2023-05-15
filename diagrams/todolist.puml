@@ -11,7 +11,7 @@ class TodoList {
 
 class TodoList_Item {
 - id:UUID
-- todoDesription:String
+- todoDescription:String
 - completed:boolean
 + setCompleted(completed:boolean):void
 + getCompleted():boolean
