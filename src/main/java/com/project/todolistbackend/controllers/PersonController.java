@@ -2,12 +2,11 @@ package com.project.todolistbackend.controllers;
 
 import com.project.todolistbackend.Models.Person;
 import com.project.todolistbackend.services.PersonServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -37,7 +36,7 @@ public class PersonController {
     }
 
     @PostMapping
-    public Person addPerson(@RequestBody Person person) {
+    public Person addPerson(@Valid @RequestBody Person person) {
         return personService.add(person);
     }
 

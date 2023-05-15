@@ -1,18 +1,21 @@
 package com.project.todolistbackend.Models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @Entity
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
+
+    @NotBlank(message = "name is mandatory")
     private String name;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private Set<TodoList> todoLists = new HashSet<>();
 

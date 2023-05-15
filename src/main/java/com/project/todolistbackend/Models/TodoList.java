@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 import java.util.UUID;
 
@@ -72,5 +71,11 @@ public class TodoList {
         todoListItems.add(todoListItem);
     }
 
+    public Set<TodoListItem> getTodoListItems() {
+        return todoListItems;
+    }
 
+    public void setTodoListItems(Set<TodoListItem> todoListItems) {
+        this.todoListItems = todoListItems;
+    }
 }

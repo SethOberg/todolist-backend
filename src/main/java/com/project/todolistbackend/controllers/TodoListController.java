@@ -1,7 +1,6 @@
 package com.project.todolistbackend.controllers;
 
 import com.project.todolistbackend.Models.TodoList;
-import com.project.todolistbackend.Models.TodoListItem;
 import com.project.todolistbackend.services.TodoListServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
