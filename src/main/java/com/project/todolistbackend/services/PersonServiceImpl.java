@@ -1,6 +1,8 @@
 package com.project.todolistbackend.services;
 
 import com.project.todolistbackend.Models.Person;
+import com.project.todolistbackend.exceptions.PersonException;
+import com.project.todolistbackend.exceptions.PersonNotFoundException;
 import com.project.todolistbackend.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,9 +26,13 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person findById(UUID id) {
+    public Person findById(UUID id) throws PersonNotFoundException {
         Optional<Person> person = personRepository.findById(id);
-        return !person.isEmpty() ? person.get() : null;
+        if (!person.isEmpty()) {
+            return person.get();
+        } else {
+            throw new PersonNotFoundException("Person not found");
+        }
     }
 
     @Override
@@ -35,7 +41,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void deleteById(UUID id) {
+    public void deleteById(UUID id) throws PersonNotFoundException {
         Person person = findById(id);
         if (person != null) personRepository.deleteById(id);
     }
