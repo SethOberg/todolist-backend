@@ -17,6 +17,8 @@ public class PersonServiceImpl implements PersonService {
     private PersonRepository personRepository;
     @Override
     public Person add(Person entity) {
+        System.out.println("Ny person id: ");
+        System.out.println(entity.getUuid());
         return personRepository.save(entity);
     }
 
@@ -36,8 +38,12 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person update(Person entity) {
-        return personRepository.save(entity);
+    public Person update(Person entity) throws PersonNotFoundException {
+        Person person = findById(entity.getUuid());
+        if(person != null) {
+            return personRepository.save(entity);
+        }
+        return null;
     }
 
     @Override

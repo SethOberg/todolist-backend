@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -30,8 +31,13 @@ public class PersonController {
     }
 
     @GetMapping
-    public Collection<Person> getAllPeople() {
-        return personService.findAll();
+    public ResponseEntity getAllPeople() {
+        List<Person> people = (List<Person>) personService.findAll();
+        if(people.isEmpty()) {
+            return new ResponseEntity("No users in database", HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity(people, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -45,8 +51,12 @@ public class PersonController {
     }
 
     @PutMapping("/{id}")
-    public Person updatePerson( @RequestBody Person person) {
-        return personService.update(person);
+    public ResponseEntity updatePerson(@RequestBody Person person) {
+        try {
+            return new ResponseEntity<>(personService.update(person), HttpStatus.OK);
+        } catch (PersonNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping

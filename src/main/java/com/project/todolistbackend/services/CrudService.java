@@ -9,7 +9,7 @@ public interface CrudService<T, UUID> {
     Collection<T> findAll();
     T findById(UUID id) throws Exception;
 
-    T update(T entity);
+    T update(T entity) throws  Exception;
 
     void deleteById(UUID id) throws Exception;
 
