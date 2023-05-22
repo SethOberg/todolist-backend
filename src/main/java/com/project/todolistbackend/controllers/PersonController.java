@@ -5,6 +5,11 @@ import com.project.todolistbackend.Models.TodoList;
 import com.project.todolistbackend.exceptions.PersonException;
 import com.project.todolistbackend.exceptions.PersonNotFoundException;
 import com.project.todolistbackend.services.PersonServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +26,14 @@ public class PersonController {
     @Autowired
     private PersonServiceImpl personService;
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Person found",
+                    content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = Person.class))}),
+            @ApiResponse(responseCode = "404", description = "Person not found",
+            content = @Content)
+    })
+    @Operation(summary = "Get a person by their id")
     @GetMapping("/{id}")
     public ResponseEntity getPerson(@PathVariable UUID id) {
         try {
