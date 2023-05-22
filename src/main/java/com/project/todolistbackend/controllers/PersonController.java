@@ -43,6 +43,14 @@ public class PersonController {
         }
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Person.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Person not found",
+                    content = @Content)
+    })
+    @Operation(summary = "Get all users")
     @GetMapping
     public ResponseEntity getAllPeople() {
         List<Person> people = (List<Person>) personService.findAll();
@@ -53,6 +61,14 @@ public class PersonController {
         }
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Person.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Person not found",
+                    content = @Content)
+    })
+    @Operation(summary = "Delete person by id")
     @DeleteMapping("/{id}")
     public ResponseEntity deletePerson(@PathVariable UUID id)  {
         try {
@@ -63,6 +79,15 @@ public class PersonController {
         }
     }
 
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Person found",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Person.class))}),
+            @ApiResponse(responseCode = "404", description = "Person not found",
+                    content = @Content)
+    })
+    @Operation(summary = "Update a person with the id defined in the requestbody")
     @PutMapping("/{id}")
     public ResponseEntity updatePerson(@RequestBody Person person) {
         try {
@@ -85,7 +110,6 @@ public class PersonController {
             person.addTodoList(todoList);
         }
         personService.update(person);
-
     }
 
 }
