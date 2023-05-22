@@ -23,6 +23,14 @@ public class TodoListItemController {
     @Autowired
     private TodoListItemServiceImpl todoListItemService;
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = TodoListItem.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "No todolist items found",
+                    content = @Content)
+    })
+    @Operation(summary = "Get all Todolist items")
     @GetMapping
     public Collection<TodoListItem> getAllTodoListItems() {
         return todoListItemService.findAll();
@@ -45,9 +53,21 @@ public class TodoListItemController {
         }
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Todolist item added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TodoListItem.class))}),
+            @ApiResponse(responseCode = "400", description = "Bad request",
+                    content = @Content)
+    })
+    @Operation(summary = "Add a new todolist item")
     @PostMapping
-    public TodoListItem addTodoListItem(@RequestBody TodoListItem todoListItem) {
-        return todoListItemService.add(todoListItem);
+    public ResponseEntity addTodoListItem(@RequestBody TodoListItem todoListItem) {
+        TodoListItem added = todoListItemService.add(todoListItem);
+        if(added != null) {
+            return new ResponseEntity<>(added, HttpStatus.CREATED);
+        }
+        return new ResponseEntity("Error adding item", HttpStatus.BAD_REQUEST);
     }
 
     @ApiResponses(value = {

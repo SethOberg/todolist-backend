@@ -31,6 +31,14 @@ public class TodoListController {
     @Autowired
     private TodoListItemServiceImpl todoListItemService;
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = TodoList.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "No todolists found",
+                    content = @Content)
+    })
+    @Operation(summary = "Get all Todolists")
     @GetMapping
     public Collection<TodoList> getAllTodoLists() {
         return todoListService.findAll();
@@ -53,9 +61,23 @@ public class TodoListController {
         }
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Todolist added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TodoList.class))}),
+            @ApiResponse(responseCode = "400", description = "Bad request",
+                    content = @Content)
+    })
+    @Operation(summary = "Add a new todolist")
     @PostMapping
-    public TodoList addTodoList(@RequestBody TodoList todoList) {
-        return todoListService.add(todoList);
+    public ResponseEntity addTodoList(@RequestBody TodoList todoList) {
+
+        TodoList added = todoListService.add(todoList);
+        if(added != null) {
+            return new ResponseEntity<>(added, HttpStatus.CREATED);
+        }
+
+        return new ResponseEntity("Error when adding todolist", HttpStatus.BAD_REQUEST);
     }
 
     @ApiResponses(value = {
@@ -87,7 +109,7 @@ public class TodoListController {
     public ResponseEntity deleteTodoList(@PathVariable UUID id) {
         try {
             todoListService.deleteById(id);
-            return new ResponseEntity("User deleted", HttpStatus.OK);
+            return new ResponseEntity("Todolist deleted", HttpStatus.OK);
         } catch (TodoListNotFoundException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         }

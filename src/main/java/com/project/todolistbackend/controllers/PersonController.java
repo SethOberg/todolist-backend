@@ -47,7 +47,7 @@ public class PersonController {
             @ApiResponse(responseCode = "200", description = "Ok", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = Person.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Person not found",
+            @ApiResponse(responseCode = "404", description = "No users found",
                     content = @Content)
     })
     @Operation(summary = "Get all users")
@@ -97,9 +97,24 @@ public class PersonController {
         }
     }
 
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Person added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Person.class))}),
+            @ApiResponse(responseCode = "400", description = "Bad request",
+                    content = @Content)
+    })
+    @Operation(summary = "Add a new todolist item")
     @PostMapping
-    public Person addPerson(@Valid @RequestBody Person person) {
-        return personService.add(person);
+    public ResponseEntity addPerson(@Valid @RequestBody Person person) {
+
+        Person added = personService.add(person);
+        if(added != null) {
+            return new ResponseEntity(added, HttpStatus.CREATED);
+        }
+
+        return new ResponseEntity("Error adding user", HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping(path = "addToDoList/{id}")
