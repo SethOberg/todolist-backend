@@ -1,6 +1,7 @@
 package com.project.todolistbackend.services;
 
 import com.project.todolistbackend.Models.TodoListItem;
+import com.project.todolistbackend.exceptions.TodoListItemNotFoundException;
 import com.project.todolistbackend.repositories.TodoListItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +27,15 @@ public class TodoListItemServiceImpl implements TodoListItemService {
     }
 
     @Override
-    public TodoListItem findById(UUID id) {
+    public TodoListItem findById(UUID id) throws TodoListItemNotFoundException {
         Optional<TodoListItem> todoListItem = todoListItemRepository.findById(id);
-        return todoListItem.isPresent() ? todoListItem.get() : null;
+
+        if(todoListItem.isPresent()) {
+            return todoListItem.get();
+        } else {
+            throw new TodoListItemNotFoundException("Todolist item not found");
+        }
+
     }
 
     @Override
@@ -37,7 +44,7 @@ public class TodoListItemServiceImpl implements TodoListItemService {
     }
 
     @Override
-    public void deleteById(UUID id) {
+    public void deleteById(UUID id) throws TodoListItemNotFoundException {
         TodoListItem todoListItem = findById(id);
         if(todoListItem != null) {
             todoListItemRepository.deleteById(id);

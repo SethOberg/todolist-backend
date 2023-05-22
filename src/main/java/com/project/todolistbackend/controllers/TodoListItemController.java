@@ -1,8 +1,11 @@
 package com.project.todolistbackend.controllers;
 
 import com.project.todolistbackend.Models.TodoListItem;
+import com.project.todolistbackend.exceptions.TodoListItemNotFoundException;
 import com.project.todolistbackend.services.TodoListItemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -20,8 +23,12 @@ public class TodoListItemController {
     }
 
     @GetMapping("/{id}")
-    public TodoListItem getTodoListItem(@PathVariable UUID id) {
-        return  todoListItemService.findById(id);
+    public ResponseEntity getTodoListItem(@PathVariable UUID id) {
+        try {
+            return new ResponseEntity(todoListItemService.findById(id), HttpStatus.OK);
+        } catch (TodoListItemNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping
@@ -30,13 +37,26 @@ public class TodoListItemController {
     }
 
     @PutMapping
-    public TodoListItem updateTodoListItem(@RequestBody TodoListItem todoListItem) {
-        return todoListItemService.update(todoListItem);
+    public ResponseEntity updateTodoListItem(@RequestBody TodoListItem todoListItem) {
+
+        try {
+            TodoListItem todoListItemOld = todoListItemService.findById(todoListItem.getId());
+            return new ResponseEntity(todoListItemService.update(todoListItem), HttpStatus.OK);
+        } catch (TodoListItemNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTodoListItem(@PathVariable UUID id) {
-        todoListItemService.deleteById(id);
+    public ResponseEntity deleteTodoListItem(@PathVariable UUID id) {
+
+        try {
+            todoListItemService.deleteById(id);
+            return new ResponseEntity("Todolist item deleted", HttpStatus.OK);
+        } catch (TodoListItemNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
 
