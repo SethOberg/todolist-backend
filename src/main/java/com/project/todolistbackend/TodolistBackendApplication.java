@@ -37,7 +37,7 @@ public class TodolistBackendApplication implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		Person person = new Person("Seth");
+		Person person = new Person("lorem");
 		person.setUuid(UUID.randomUUID());
 		TodoList todoList = new TodoList(false, "Grocery shopping");
 		todoList.setPerson(person);

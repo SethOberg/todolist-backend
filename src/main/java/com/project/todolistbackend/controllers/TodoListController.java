@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/todolists")
 public class TodoListController {
     @Autowired

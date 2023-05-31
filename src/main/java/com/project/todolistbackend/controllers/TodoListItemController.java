@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/todolistitems")
 public class TodoListItemController {
     @Autowired
