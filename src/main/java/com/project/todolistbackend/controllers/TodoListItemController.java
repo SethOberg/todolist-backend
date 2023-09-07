@@ -18,11 +18,12 @@ import java.util.Collection;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin("*")
 @RequestMapping("/todolistitems")
 public class TodoListItemController {
     @Autowired
     private TodoListItemServiceImpl todoListItemService;
+
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok", content = {
@@ -90,6 +91,21 @@ public class TodoListItemController {
         }
 
     }
+
+    @Operation(summary = "Mark a todolist item completed or not completed by id")
+    @PutMapping("/{id}")
+    public ResponseEntity todolistItemCompleted(@PathVariable UUID id) {
+
+        try {
+            TodoListItem todoListItemOld = todoListItemService.findById(id);
+            todoListItemOld.setCompleted(!todoListItemOld.isCompleted());
+            return new ResponseEntity(todoListItemService.update(todoListItemOld), HttpStatus.OK);
+        } catch (TodoListItemNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+    }
+
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Todolist item deleted",

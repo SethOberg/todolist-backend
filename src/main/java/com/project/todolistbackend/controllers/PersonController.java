@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin("*")
 @RequestMapping("/person")
 public class PersonController {
     @Autowired
@@ -129,13 +129,15 @@ public class PersonController {
     }
 
     @PutMapping(path = "addToDoList/{id}")
-    public void addTodoList(@PathVariable UUID id, @RequestBody TodoList todoList) throws Exception {
+    public Person addTodoList(@PathVariable UUID id, @RequestBody TodoList todoList) throws Exception {
         Person person = personService.findById(id);
         todoList.setPerson(person);
         if(person != null) {
             person.addTodoList(todoList);
         }
         personService.update(person);
+
+        return person;
     }
 
 }

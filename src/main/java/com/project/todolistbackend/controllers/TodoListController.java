@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin("*")
 @RequestMapping("/todolists")
 public class TodoListController {
     @Autowired
@@ -92,6 +92,34 @@ public class TodoListController {
     @PutMapping("/{id}")
     public ResponseEntity updateTodoList(@RequestBody TodoList todoList) {
         try {
+            return new ResponseEntity(todoListService.update(todoList), HttpStatus.OK);
+        } catch (TodoListNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Todolist updated",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TodoList.class))}),
+            @ApiResponse(responseCode = "404", description = "Todolist not found",
+                    content = @Content)
+    })
+    @Operation(summary = "Update a todolist using the id defined in the requestbody")
+    @PutMapping("/complete/{id}")
+    public ResponseEntity updateTodoListCompletion(@PathVariable UUID id) {
+        try {
+            TodoList todoList = todoListService.findById(id);
+
+            todoList.setCompleted(!todoList.isCompleted());
+
+            if (todoList.isCompleted()) {
+                // Mark all associated TodoListItems as completed
+                todoList.getTodoListItems().forEach(todoListItem -> {
+                    todoListItem.setCompleted(true);
+                });
+            }
+
             return new ResponseEntity(todoListService.update(todoList), HttpStatus.OK);
         } catch (TodoListNotFoundException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
