@@ -5,8 +5,14 @@ import com.project.todolistbackend.Models.TodoList;
 import com.project.todolistbackend.exceptions.PersonException;
 import com.project.todolistbackend.exceptions.PersonNotFoundException;
 import com.project.todolistbackend.services.PersonServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +22,20 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/person")
 public class PersonController {
     @Autowired
     private PersonServiceImpl personService;
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Person found",
+                    content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = Person.class))}),
+            @ApiResponse(responseCode = "404", description = "Person not found",
+            content = @Content)
+    })
+    @Operation(summary = "Get a person by their id")
     @GetMapping("/{id}")
     public ResponseEntity getPerson(@PathVariable UUID id) {
         try {
@@ -30,6 +45,23 @@ public class PersonController {
         }
     }
 
+    @GetMapping("/getByName/{name}")
+    public ResponseEntity getPersonByName(@PathVariable String name) {
+        try {
+            return new ResponseEntity(personService.findByName(name), HttpStatus.OK);
+        } catch(PersonNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Person.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "No users found",
+                    content = @Content)
+    })
+    @Operation(summary = "Get all users")
     @GetMapping
     public ResponseEntity getAllPeople() {
         List<Person> people = (List<Person>) personService.findAll();
@@ -40,6 +72,14 @@ public class PersonController {
         }
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Person.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Person not found",
+                    content = @Content)
+    })
+    @Operation(summary = "Delete person by id")
     @DeleteMapping("/{id}")
     public ResponseEntity deletePerson(@PathVariable UUID id)  {
         try {
@@ -50,6 +90,15 @@ public class PersonController {
         }
     }
 
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Person found",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Person.class))}),
+            @ApiResponse(responseCode = "404", description = "Person not found",
+                    content = @Content)
+    })
+    @Operation(summary = "Update a person with the id defined in the requestbody")
     @PutMapping("/{id}")
     public ResponseEntity updatePerson(@RequestBody Person person) {
         try {
@@ -59,9 +108,24 @@ public class PersonController {
         }
     }
 
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Person added",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Person.class))}),
+            @ApiResponse(responseCode = "400", description = "Bad request",
+                    content = @Content)
+    })
+    @Operation(summary = "Add a new todolist item")
     @PostMapping
-    public Person addPerson(@Valid @RequestBody Person person) {
-        return personService.add(person);
+    public ResponseEntity addPerson(@Valid @RequestBody Person person) {
+
+        Person added = personService.add(person);
+        if(added != null) {
+            return new ResponseEntity(added, HttpStatus.CREATED);
+        }
+
+        return new ResponseEntity("Error adding user", HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping(path = "addToDoList/{id}")
@@ -72,7 +136,6 @@ public class PersonController {
             person.addTodoList(todoList);
         }
         personService.update(person);
-
     }
 
 }

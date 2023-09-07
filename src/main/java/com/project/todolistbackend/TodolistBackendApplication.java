@@ -6,6 +6,7 @@ import com.project.todolistbackend.Models.TodoListItem;
 import com.project.todolistbackend.repositories.PersonRepository;
 import com.project.todolistbackend.repositories.TodoListItemRepository;
 import com.project.todolistbackend.repositories.TodoListRepository;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -14,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.UUID;
 
+@OpenAPIDefinition
 @SpringBootApplication
 public class TodolistBackendApplication implements ApplicationRunner {
 	private PersonRepository personRepository;
@@ -35,7 +37,7 @@ public class TodolistBackendApplication implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		Person person = new Person("Seth");
+		Person person = new Person("lorem");
 		person.setUuid(UUID.randomUUID());
 		TodoList todoList = new TodoList(false, "Grocery shopping");
 		todoList.setPerson(person);

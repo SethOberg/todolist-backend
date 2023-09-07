@@ -51,4 +51,14 @@ public class PersonServiceImpl implements PersonService {
         Person person = findById(id);
         if (person != null) personRepository.deleteById(id);
     }
+
+    @Override
+    public Person findByName(String name) throws PersonNotFoundException {
+        Optional<Person> person = Optional.ofNullable(personRepository.findByName(name));
+        if (!person.isEmpty()) {
+            return person.get();
+        } else {
+            throw new PersonNotFoundException("Person not found");
+        }
+    }
 }
